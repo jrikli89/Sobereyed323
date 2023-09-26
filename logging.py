@@ -14,10 +14,7 @@ console_handler = logging.StreamHandler()
 
 #Identify whether the code is running on Replit or local system.
 #Based on the environment, use corresponding log file.
-if os.getenv('REPLIT') == '1':
-  filename = 'replit_app.log'
-else:
-  filename = 'app.log'
+filename = 'replit_app.log' if os.getenv('REPLIT') == '1' else 'app.log'
 file_handler = logging.FileHandler(filename)
 
 #Set the level of logging for console and file.

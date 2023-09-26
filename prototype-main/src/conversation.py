@@ -9,9 +9,7 @@ class Conversation:
         self.history = []
         
     def generate_response(self, input):
-        # TODO: Use model to generate response using input
-        response = "Model response goes here"
-        return response
+        return "Model response goes here"
     
     def save_conversation(self):
         # TODO: Save conversation history to database

@@ -23,8 +23,7 @@ class EncryptionManager:
             ciphertext = base64.b64decode(ciphertext.encode('utf-8'))
             iv = ciphertext[:AES.block_size]
             cipher = AES.new(self.key, AES.MODE_CFB, iv)
-            plaintext = cipher.decrypt(ciphertext[AES.block_size:]).decode('utf-8')
-            return plaintext
+            return cipher.decrypt(ciphertext[AES.block_size:]).decode('utf-8')
         except Exception as e:
             print(f"Decryption Error: {e}")
             return None

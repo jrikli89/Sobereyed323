@@ -70,11 +70,10 @@ class Database:
         return response.choices[0].text.strip()
 
     def get_builderio_template(self, template_id):
-        template = self.builderio.get(template_id)
-        # Add validation for the response of the Builder.io service
-        if not template:
+        if template := self.builderio.get(template_id):
+            return template
+        else:
             raise Exception('Could not fetch the template from Builder.io. Please check your template_id and Builder.io API service')
-        return template
 
 DB_CONNECTION = Database()
 ```

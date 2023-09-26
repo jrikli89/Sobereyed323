@@ -30,14 +30,14 @@ def save_document(user_api_name, doc_data):
 def get_documents_by_user(user_api_name):
     try:
         docs = col_documents.find({'user_api_name': user_api_name})
-        return [doc for doc in docs]
+        return list(docs)
     except PyMongoError as pe:
         print(f"An error occurred while fetching the document: {str(pe)}")
 
 def get_all_documents():
     try:
         docs = col_documents.find()
-        return [doc for doc in docs]
+        return list(docs)
     except PyMongoError as pe:
         print(f"An error occurred while fetching the document: {str(pe)}")
 

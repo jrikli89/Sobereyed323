@@ -14,9 +14,8 @@ def constrain_dependency_version(version):
     Constrain a dependency to a specific version
     :param version: the exact version to constrain the pytest to
     """
-    constraint_file = open("requirements.txt", "a")
-    constraint_file.write(f"pytest=={version}")
-    constraint_file.close()
+    with open("requirements.txt", "a") as constraint_file:
+        constraint_file.write(f"pytest=={version}")
 
 # 2. Upgrade all dependencies to the latest compatible version of pytest
 def upgrade_to_latest_compatible_pytest():

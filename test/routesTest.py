@@ -43,8 +43,8 @@ class TestRoutes(unittest.TestCase):
 
     # Test for valid file retrieval.
     def test_get_file(self):
-        test_id = 'test_id' 
-        response = self.client.get('/files/'+test_id)
+        test_id = 'test_id'
+        response = self.client.get(f'/files/{test_id}')
         if response.status_code == 200:
             self.assertIn('File', response.data)
         else:

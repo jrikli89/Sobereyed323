@@ -24,8 +24,7 @@ class SaleItem(models.Model):
     # The method download_item() retrieves a sale item using a unique item_id as UUID.
     def download_item(self, item_id):
         try:
-            item = get_object_or_404(self, pk=item_id)
-            return item
+            return get_object_or_404(self, pk=item_id)
         except Exception as e:
             print(f"Exception occurred while downloading item: {e}")
             raise

@@ -18,9 +18,7 @@ def handle_settings():
         for key, value in new_settings.items():
             if key in user_settings:
                 user_settings[key] = value
-        return jsonify(user_settings), 200
-    else:
-        return jsonify(user_settings), 200
+    return jsonify(user_settings), 200
 
 if __name__ == "__main__":
     app.run(debug=True)

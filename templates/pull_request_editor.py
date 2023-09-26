@@ -64,21 +64,21 @@ def main():
         return
 
     # If there are open pull requests
-    if open_pull_requests:    
+    if open_pull_requests:
         
+        # New title and body for the pull request
+        title = 'Modified title'
+        body = 'Modified body'
+
         # Iterate over each pull request
         for pull_request in open_pull_requests:
             # The pull request id
             pull_id = pull_request['id']
-            
-            # New title and body for the pull request
-            title = 'Modified title'
-            body = 'Modified body'
-            
+
             try:
-                # Edit the pull request
-                edited_pull_request = edit_pull_request(repo_owner, repo_name, pull_id, title, body)
-                if edited_pull_request:
+                if edited_pull_request := edit_pull_request(
+                    repo_owner, repo_name, pull_id, title, body
+                ):
                     # Print success message after editing
                     print(f'Edited pull request {pull_id}.')
             except Exception as e:

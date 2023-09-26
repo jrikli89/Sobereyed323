@@ -14,7 +14,7 @@ def speech_to_text():
     # recoginize_() method will throw a request error if the API is unreachable, hence using exception handling
     try:
         # using google speech recognition
-        print("Text: "+r.recognize_google(audio_text))
+        print(f"Text: {r.recognize_google(audio_text)}")
         return r.recognize_google(audio_text)
     except:
          print("Sorry, I did not get that")

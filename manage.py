@@ -40,9 +40,9 @@ def handle_migrations(is_replit):
     except Exception as e:
         if is_replit:
             import replit
-            replit.log.error('Migrations failed: {}'.format(e))
+            replit.log.error(f'Migrations failed: {e}')
         else:
-            print('Migrations failed: {}'.format(e))
+            print(f'Migrations failed: {e}')
 
 
 def check_packages(is_replit):
@@ -52,9 +52,9 @@ def check_packages(is_replit):
         if package not in installed_packages:
             if is_replit:
                 import replit
-                replit.log.error('Package {} is not installed'.format(package))
+                replit.log.error(f'Package {package} is not installed')
             else:
-                print('Package {} is not installed'.format(package))
+                print(f'Package {package} is not installed')
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'startapp':
