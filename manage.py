@@ -17,7 +17,7 @@ def handle_migrations():
         execute_from_command_line(['./manage.py', 'makemigrations'])
         execute_from_command_line(['./manage.py', 'migrate'])
     except Exception as e:
-        print('Migrations failed: {}'.format(e))
+        print(f'Migrations failed: {e}')
 
 
 if __name__ == '__main__':
