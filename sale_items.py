@@ -9,19 +9,17 @@ class SaleItem(models.Model):
     def upload_item(self, item_data):
         if not isinstance(item_data, dict):
             raise ValueError("Item data must be a dictionary.")
-        
+
         with transaction.atomic():
             try:
-                item = SaleItem.objects.create(**item_data)
-                return item
+                return SaleItem.objects.create(**item_data)
             except Exception as e:
                 print(f"Exception occurred while uploading item: {e}")
                 raise
 
     def retrieve_item(self, item_id):
         try:
-            item = get_object_or_404(SaleItem, pk=item_id)
-            return item
+            return get_object_or_404(SaleItem, pk=item_id)
         except Exception as e:
             print(f"Exception occurred while retrieving item: {e}")
             raise

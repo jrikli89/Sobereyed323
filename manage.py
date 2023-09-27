@@ -29,7 +29,7 @@ def handle_migrations():
         execute_from_command_line(['./manage.py', 'makemigrations'])
         execute_from_command_line(['./manage.py', 'migrate'])
     except Exception as e:
-        print('Migrations failed: {}'.format(e))
+        print(f'Migrations failed: {e}')
 
 
 def check_packages():
@@ -37,7 +37,7 @@ def check_packages():
     installed_packages = [pkg.key for pkg in pkg_resources.working_set]
     for package in REQUIRED_PACKAGES:
         if package not in installed_packages:
-            print('Package {} is not installed'.format(package))
+            print(f'Package {package} is not installed')
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'startapp':
