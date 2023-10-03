@@ -28,23 +28,23 @@ class SocialMediaBotView(View):
 
 
     # Encryption and decryption helper methods
-    def encrypt(plain_text, password):
+    def encrypt(self, password):
         salt = os.urandom(BLOCK_SIZE)
         key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000, dklen=32)
 
         cipher_config = AES.new(key, AES.MODE_CBC)
-        cipher_text = cipher_config.encrypt(pad(plain_text, BLOCK_SIZE))
+        cipher_text = cipher_config.encrypt(pad(self, BLOCK_SIZE))
 
         return binascii.hexlify(salt + cipher_text)
 
-    def decrypt(cipher_text, password):
-        cipher_text = binascii.unhexlify(cipher_text)
-        salt, cipher_text = cipher_text[:BLOCK_SIZE], cipher_text[BLOCK_SIZE:]
+    def decrypt(self, password):
+        self = binascii.unhexlify(self)
+        salt, self = self[:BLOCK_SIZE], self[BLOCK_SIZE:]
 
         key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000, dklen=32)
 
         cipher_config = AES.new(key, AES.MODE_CBC, iv=salt)
-        return unpad(cipher_config.decrypt(cipher_text), BLOCK_SIZE)
+        return unpad(cipher_config.decrypt(self), BLOCK_SIZE)
 
     # The get method allows the bot to authenticate a user.
     def get(self, request, user_id, platform_name):
