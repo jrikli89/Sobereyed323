@@ -24,14 +24,14 @@ try:
     logger.addHandler(handler)
 
 except Exception as e:
-    logger.error('An error occurred while setting up the handler: {}'.format(e))
+    logger.error(f'An error occurred while setting up the handler: {e}')
 
 try:
     # Applying the above configuration
     logging.config.dictConfig(LOGGING_CONFIG)
-    
+
 except Exception as e:
-    logger.error('An error occurred while applying logger configuration: {}'.format(e))
+    logger.error(f'An error occurred while applying logger configuration: {e}')
 
 # Function logs the pactflow response. It takes both headers and body as inputs.
 def log_pactflow_response(headers, body):
@@ -40,6 +40,6 @@ def log_pactflow_response(headers, body):
         logger.info('Pactflow Response Headers: %s', str(headers))
         # Logging the pactflow response body
         logger.info('Pactflow Response Body: %s', str(body))
-        
+
     except Exception as e:
-        logger.error('An error occurred during logging of pactflow response: {}'.format(e))
+        logger.error(f'An error occurred during logging of pactflow response: {e}')
