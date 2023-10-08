@@ -29,7 +29,7 @@ def main() -> NoReturn:
 
 def print_env_variables() -> Dict[str, str]:
     """Print all available environment variables and their corresponding keys"""
-    env_vars = dict(os.environ.items())
+    env_vars = dict(os.environ)
     for key, value in env_vars.items():
         print(f"{key}: {value}")
     return env_vars

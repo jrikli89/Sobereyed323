@@ -10,7 +10,7 @@ def get_droplets() -> Union[List[dict], None]:
     """
     
     api_key = os.getenv('DO_API_KEY')
-    
+
     if not api_key:
         print("Missing API key.")
         return None
@@ -24,11 +24,9 @@ def get_droplets() -> Union[List[dict], None]:
         response = requests.get('https://api.digitalocean.com/v2/droplets', headers=headers)
 
         if response.status_code == 200:
-            droplets = json.loads(response.text)['droplets']
-            return droplets
-        else:
-            print(f"Error: {response.status_code}")
-            return None
+            return json.loads(response.text)['droplets']
+        print(f"Error: {response.status_code}")
+        return None
     except (requests.RequestException, KeyError) as error:
         print(f"Error in get_droplets: {error}")
         return None
