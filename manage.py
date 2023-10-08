@@ -6,6 +6,7 @@ This script is the entry point for running the Django application and handling e
 import os
 import sys
 from django.core.management import execute_from_command_line
+from requests import post
 from typing import NoReturn, Dict
 from dotenv import load_dotenv
 
@@ -23,6 +24,7 @@ def main() -> NoReturn:
         raise ValueError('The DJANGO_SETTINGS_MODULE environment variable must be set')
 
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Smodal.settings')
+    send_api_call()  # Send the api call
     handle_migrations()
     print_env_variables()  # Print the environment variables
     execute_from_command_line(sys.argv)
@@ -52,6 +54,15 @@ def handle_migrations() -> NoReturn:
         except Exception as e:
             logger.exception(f'Executing command "{command}" failed: {e}')
 
+
+def send_api_call() -> NoReturn:
+    """Send the api call and confirm connection"""
+    url = os.getenv("API_URL")
+    response = post(url)
+    if response.status_code == 200:
+        print("Connection confirmed.")
+    else:
+        print(f"Connection failed with status {response.status_code}.")
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == 'startapp':

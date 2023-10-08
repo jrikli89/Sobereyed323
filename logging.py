@@ -9,9 +9,11 @@ logger = logging.getLogger(__name__)
 # Setting the logger configuration from settings
 LOGGING_CONFIG = settings.LOGGING  # type: dict
 
+# Setting up the debug flag
+DEBUG = True
+
 # Setting up the host for Graylog or Logstash. Defaults to 'localhost'
 LOGGING_HOST = os.getenv('LOGGING_HOST', 'localhost')  # type: str
-
 # Setting up the Syslog UDP port for Graylog or Logstash. Defaults to port 514
 LOGGING_PORT = os.getenv('LOGGING_PORT', 514)  # type: int
 
@@ -22,13 +24,17 @@ try:
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 except Exception as e:  # type: Exception
-    logger.error(f'An error occurred while setting up the handler: {e}')
+    if DEBUG:
+        logger.error(f'An error occurred while setting up the handler: {e}')
+        sys.exit(1)
 
 try:
     # Apply LOGGING_CONFIG
     logging.config.dictConfig(LOGGING_CONFIG)
 except Exception as e:  # type: Exception
-    logger.error(f'An error occurred while applying logger configuration: {e}')
+    if DEBUG:
+        logger.error(f'An error occurred while applying logger configuration: {e}')
+        sys.exit(1)
 
 
 def log_pactflow_response(headers: dict, body: str) -> None:
@@ -49,4 +55,5 @@ def log_pactflow_response(headers: dict, body: str) -> None:
         # Log the pactflow response body
         logger.info('Pactflow Response Body: %s', body)
     except Exception as e:  # type: Exception
-        logger.error(f'An error occurred during logging of pactflow response: {e}')
+        if DEBUG:
+            logger.error(f'An error occurred during logging of pactflow response: {e}')
