@@ -10,11 +10,9 @@ def get_droplets(api_key):
     response = requests.get('https://api.digitalocean.com/v2/droplets', headers=headers)
 
     if response.status_code == 200:
-        droplets = json.loads(response.text)['droplets']
-        return droplets
-    else:
-        print(f"Error: {response.status_code}")
-        return None
+        return json.loads(response.text)['droplets']
+    print(f"Error: {response.status_code}")
+    return None
 
 def create_droplet(api_key, name, region, size, image):
     data = {
@@ -33,9 +31,8 @@ def create_droplet(api_key, name, region, size, image):
 
     if response.status_code == 202:
         return json.loads(response.text)
-    else:
-        print(f"Error: {response.status_code}")
-        return None
+    print(f"Error: {response.status_code}")
+    return None
 
 # replace 'API_KEY', 'my-droplet-name', 'nyc1', 's-1vcpu-1gb', 'ubuntu-16-04-x64' with actual parameters
 new_droplet = create_droplet('API_KEY', 'my-droplet-name', 'nyc1', 's-1vcpu-1gb', 'ubuntu-16-04-x64')
