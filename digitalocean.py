@@ -27,8 +27,7 @@ def get_droplets(api_key):
 
     # Add additional checks for the status code
     if response.status_code == 200:
-        droplets = json.loads(response.text)['droplets']
-        return droplets
+        return json.loads(response.text)['droplets']
     elif response.status_code >= 400 and response.status_code < 500:
         logger.error(f"Client error: {response.status_code} {response.reason} {response.text}")
     elif response.status_code >= 500:
