@@ -92,35 +92,33 @@ def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
         if not r.ok:
             raise Exception("Error retrieved during fetching tokens: {0}, Response: {1}".format(r.reason, r.text))
 
-        if r.status_code == 200:
-            # Successful request, redirect to home page storing tokens.
-            access_token = r.json().get('access_token')
-
-                # Request to Pactflow.
-            pactflow_headers = {'Authorization': f'Bearer {access_token}'}
-            r_pactflow = requests.get('https://modaltokai-smodal.pactflow.io', headers=pactflow_headers)
-
-            if not r_pactflow.ok:
-                raise Exception("Error fetching data from Pactflow: {0}, Response: {1}".format(r_pactflow.reason, r_pactflow.text))
-
-            if r_pactflow.status_code == 200:
-                # Save pactflow response details
-                response_headers = json.dumps(dict(r_pactflow.headers))
-                response_body = json.dumps(r_pactflow.json())
-
-                config.pactflow_response_headers = response_headers
-                config.pactflow_response_body = response_body
-                config.save()
-
-                # Log pactflow response
-                log_pactflow_response(response_headers, response_body)
-            else:
-                return HttpResponse("Error fetching data from Pactflow. Try again.", status=500)
-
-            # After storing the tokens, redirect as per your application's flow.
-            return redirect('/home/')
-        else:
+        if r.status_code != 200:
             raise Exception("Error while fetching tokens")
+        # Successful request, redirect to home page storing tokens.
+        access_token = r.json().get('access_token')
+
+        pactflow_headers = {'Authorization': f'Bearer {access_token}'}
+        r_pactflow = requests.get('https://modaltokai-smodal.pactflow.io', headers=pactflow_headers)
+
+        if not r_pactflow.ok:
+            raise Exception("Error fetching data from Pactflow: {0}, Response: {1}".format(r_pactflow.reason, r_pactflow.text))
+
+        if r_pactflow.status_code == 200:
+            # Save pactflow response details
+            response_headers = json.dumps(dict(r_pactflow.headers))
+            response_body = json.dumps(r_pactflow.json())
+
+            config.pactflow_response_headers = response_headers
+            config.pactflow_response_body = response_body
+            config.save()
+
+            # Log pactflow response
+            log_pactflow_response(response_headers, response_body)
+        else:
+            return HttpResponse("Error fetching data from Pactflow. Try again.", status=500)
+
+        # After storing the tokens, redirect as per your application's flow.
+        return redirect('/home/')
     except Exception as e:
         logger.error(f"Error during OIDC Callback: {str(e)}", exc_info=True)
         return HttpResponse(f"Error during OIDC Callback: {str(e)}", status=500)
