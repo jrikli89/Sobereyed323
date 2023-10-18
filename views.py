@@ -87,33 +87,32 @@ def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
         if not r.ok:
             raise Exception("Error retrieved during fetching tokens: {0}, Response: {1}".format(r.reason, r.text))
 
-        if r.status_code == 200:
-            access_token = r.json().get('access_token')
-
-            # Updated JWT Token
-            access_token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InRyaWFsIn0.eyJpc3MiOiJuZ2lueCBpc3N1ZXIiLCJpYXQiOjE2OTcyOTEwNDQsImp0aSI6IjE0ODM3Iiwic3ViIjoiVDAwMDEzMTk3NiIsImV4cCI6MTY5OTg4MzA0NH0.geiDEOEaxkk9naHlZI4pbBPRCChEJDKKLQSQebQeSfsn-uKk2fhqEEqUW3gLAN2r0j_uc2wgIlMgFPpDzmOf-1Nn6Dp54qfcUC8A2H59X7pkFhsaWRWGYPOn5peu3y8FPSo2a7gw77xOC2oz8o7iOhQYv4yb68bv2AWLepaGN0AsY4fr8tJykHrqmK6zN_1-85g9p-K50PzrEnHanO6WgmgSl6RxvCmIBlb6Hpeeb5bvm1kbsWgobpJSUXqepbJx5ef_YROGm93hVylnR80vCI53J-Ba0c6vJWrAec3sXmJQaDBjGYOl5mxueQWNz0cXNFd1RiimyIT3zmFSEePi71eatutmkZYVwR1mTgjGvJFCamZUWmeJ_o-N41l5I64_z-0sxIG9pjk8xC9EHhdqinikINcQ1s-jbTldG9aouDE8c9NG2jXumjV76CA6Xc3BD4-ciDLFIZrvbGX4H3dZgK141A6TUjnaO5AxP1UsDF1lLU-tE3vRMIxoR6VZzEKH"
-
-            pactflow_headers = {'Authorization': f'Bearer {access_token}'}
-            r_pactflow = requests.get('https://modaltokai-smodal.pactflow.io', headers=pactflow_headers)
-
-            if not r_pactflow.ok:
-                raise Exception("Error fetching data from Pactflow: {0}, Response: {1}".format(r_pactflow.reason, r_pactflow.text))
-
-            if r_pactflow.status_code == 200:
-                response_headers = json.dumps(dict(r_pactflow.headers))
-                response_body = json.dumps(r_pactflow.json())
-
-                config.pactflow_response_headers = response_headers
-                config.pactflow_response_body = response_body
-                config.save()
-
-                log_pactflow_response(response_headers, response_body)
-            else:
-                return HttpResponse("Error fetching data from Pactflow. Try again.", status=500)
-
-            return redirect('/home/')
-        else:
+        if r.status_code != 200:
             raise Exception("Error while fetching tokens")
+        access_token = r.json().get('access_token')
+
+        # Updated JWT Token
+        access_token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6InRyaWFsIn0.eyJpc3MiOiJuZ2lueCBpc3N1ZXIiLCJpYXQiOjE2OTcyOTEwNDQsImp0aSI6IjE0ODM3Iiwic3ViIjoiVDAwMDEzMTk3NiIsImV4cCI6MTY5OTg4MzA0NH0.geiDEOEaxkk9naHlZI4pbBPRCChEJDKKLQSQebQeSfsn-uKk2fhqEEqUW3gLAN2r0j_uc2wgIlMgFPpDzmOf-1Nn6Dp54qfcUC8A2H59X7pkFhsaWRWGYPOn5peu3y8FPSo2a7gw77xOC2oz8o7iOhQYv4yb68bv2AWLepaGN0AsY4fr8tJykHrqmK6zN_1-85g9p-K50PzrEnHanO6WgmgSl6RxvCmIBlb6Hpeeb5bvm1kbsWgobpJSUXqepbJx5ef_YROGm93hVylnR80vCI53J-Ba0c6vJWrAec3sXmJQaDBjGYOl5mxueQWNz0cXNFd1RiimyIT3zmFSEePi71eatutmkZYVwR1mTgjGvJFCamZUWmeJ_o-N41l5I64_z-0sxIG9pjk8xC9EHhdqinikINcQ1s-jbTldG9aouDE8c9NG2jXumjV76CA6Xc3BD4-ciDLFIZrvbGX4H3dZgK141A6TUjnaO5AxP1UsDF1lLU-tE3vRMIxoR6VZzEKH"
+
+        pactflow_headers = {'Authorization': f'Bearer {access_token}'}
+        r_pactflow = requests.get('https://modaltokai-smodal.pactflow.io', headers=pactflow_headers)
+
+        if not r_pactflow.ok:
+            raise Exception("Error fetching data from Pactflow: {0}, Response: {1}".format(r_pactflow.reason, r_pactflow.text))
+
+        if r_pactflow.status_code == 200:
+            response_headers = json.dumps(dict(r_pactflow.headers))
+            response_body = json.dumps(r_pactflow.json())
+
+            config.pactflow_response_headers = response_headers
+            config.pactflow_response_body = response_body
+            config.save()
+
+            log_pactflow_response(response_headers, response_body)
+        else:
+            return HttpResponse("Error fetching data from Pactflow. Try again.", status=500)
+
+        return redirect('/home/')
     except Exception as e:
         logger.error(f"Error during OIDC Callback: {str(e)}", exc_info=True)
         return HttpResponse(f"Error during OIDC Callback: {str(e)}", status=500)
