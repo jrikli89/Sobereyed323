@@ -1,5 +1,4 @@
 import os
-from logging import handlers
 from django.conf import settings
 
 project_logger = __import__('logging').getLogger(__name__)
@@ -15,7 +14,7 @@ LOGGING_HOST = os.getenv('LOGGING_HOST', 'localhost')
 LOGGING_PORT = os.getenv('LOGGING_PORT', 514)
 
 try:
-    handler = handlers.SysLogHandler(address=(PAPERTRAIL_HOST, PAPERTRAIL_PORT))
+    handler = __import__('logging').handlers.SysLogHandler(address=(PAPERTRAIL_HOST, PAPERTRAIL_PORT))
     formatter = __import__('logging').Formatter('%(asctime)s %(levelname)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
     handler.setFormatter(formatter)
     project_logger.addHandler(handler)
