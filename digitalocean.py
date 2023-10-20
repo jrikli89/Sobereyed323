@@ -23,13 +23,10 @@ def get_droplets(api_key):
         response = requests.get('https://api.digitalocean.com/v2/droplets', headers=headers)
         response.raise_for_status()
 
-        droplets = json.loads(response.text)['droplets']
-        
-        return droplets
-
+        return json.loads(response.text)['droplets']
     except requests.exceptions.HTTPError as http_err:
         logging.error(f'HTTP error occurred: {http_err}, Error Code: {response.status_code}')
     except Exception as err:
         logging.error(f'Other error occurred: {err}')
-    
+
     return None
