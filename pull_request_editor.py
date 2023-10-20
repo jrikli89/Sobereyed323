@@ -26,9 +26,7 @@ def get_open_pull_requests(repo_owner: str,
     """
     try:
         repo = g.get_repo(f"{repo_owner}/{repo_name}")
-        open_pull_requests = repo.get_pulls(state = 'open')
-        return open_pull_requests
-
+        return repo.get_pulls(state = 'open')
     except Exception as e:
         logger.error('Error occurred while getting open pull requests: {str(e)}')
         # Raise the error for further handling
