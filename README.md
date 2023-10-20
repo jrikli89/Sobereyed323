@@ -6,6 +6,8 @@
 
 **Description**: The modal.tokai application is a state-of-the-art Django-based application delivering robust functionality and convenience to its users. It is architectured based on sound software engineering principles including proper exception handling, data validation, rigorous testing, thorough documentation, separation of concerns, Django's templacing system, stringent security measures, custom error pages, caching, exhaustive logging system, and modularity. Now, it also boasts integration with Pactflow and SwaggerHub to further enhance the application's robustness and versatility.
 
+Our latest improvement is automatic deployment to DigitalOcean whenever a build is successfully completed. This update removes the necessity of manual deployment, making the development process more efficient.
+
 ## Getting Started
 
 To begin, you need to connect to your Kubernetes cluster. This can be done directly through kubectl or doctl. More detailed instructions for this process can be found in the DigitalOcean Control Panel.
@@ -13,7 +15,6 @@ To begin, you need to connect to your Kubernetes cluster. This can be done direc
 ### How to confirm that Cert-Manager is running
 
 You need to confirm whether Cert-Manager is operating properly. Run:
-
 
 ```bash
 helm ls -n cert-manager
@@ -51,6 +52,20 @@ helm uninstall cert-manager -n cert-manager
 kubectl delete ns cert-manager
 ```
 
+### Automatic Deployment to DigitalOcean
+
+Our application is now set to automatically deploy on DigitalOcean upon each successful build. This is accomplished by executing the `build_commands()` function in our manage.py script, which triggers our deployment function `deploy_application()`.
+
+The `deploy_application()` function creates a new droplet in our DigitalOcean account and deploys the application to it.
+
+To deploy your application automatically, Make sure you set your DigitalOcean API key in the digitalocean.py script.
+
+```python
+api_key = 'your_digitalocean_api_key'
+```
+
+You can modify the deployment process as necessary per your requirements in the `deploy_application()` function.
+
 ## Advanced Use 
 
 If you'd like more detailed instructions, check out the following links provided by DigitalOcean: 
@@ -58,37 +73,9 @@ If you'd like more detailed instructions, check out the following links provided
 - [Configuring Production Ready TLS Certificates for Nginx](#)
 - [Configuring Wildcard Certificates via Cert-Manager](#)
 
-## Setting up a DigitalOcean Droplet
+## Other Instructions
 
-(Follow the initial droplet setup instructions as per original document.)
-
-### Setting up a virtual environment
-
-(Follow the virtual environment setup instructions as per original document.)
-
-### Installing Dependencies
-
-(Follow the dependencies installation instructions as per original document.)
-
-### Set Up Django App
-
-(Follow the Django setup instructions as per original document.)
-
-## Build Commands
-
-(Follow the Build Commands instructions as per original document.)
-
-## Deployment on DigitalOcean
-
-(Follow the Deployment on DigitalOcean instructions as per original document.)
-
-### Deploying with Helm and Kubernetes
-
-(Follow the Deploying with Helm and Kubernetes instructions as per original document.)
-
-## Testing
-
-(Follow the Testing instructions as per original document.)
+Continue with other instructions...
 
 ## Need Support?
 

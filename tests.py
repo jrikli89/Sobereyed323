@@ -2,6 +2,7 @@ from django.test import TestCase
 from django.core.exceptions import ValidationError
 from Smodal.social_media_bot import SocialMediaBot
 from Smodal.sale_items import SaleItem, ChatBot
+from Smodal.digitalocean import deploy_application, get_droplets
 import uuid
 import os
 from .models import OIDCConfiguration, Credentials, EncryptedSensitiveData
@@ -30,16 +31,30 @@ class SmodalTest(TestCase):
             self.sale_item.base_url = os.getenv('LOCAL_DB_URL')
             self.chat_bot.base_url = os.getenv('LOCAL_DB_URL')
         
-        self.build_commands = [["./manage.py", "collectstatic", "--noinput"],
-                            ["./manage.py", "makemigrations"],
-                            ["./manage.py", "migrate"]]
+        self.build_commands = [
+            ["./manage.py", "collectstatic", "--noinput"],
+            ["./manage.py", "makemigrations"],
+            ["./manage.py", "migrate"]
+        ]
+
+        self.api_key = 'your_api_key'
 
     def test_build_commands(self):
         for command in self.build_commands:
             process = Popen(command, stdout=PIPE, stderr=PIPE)
             stdout, stderr = process.communicate()
             self.assertEqual(process.returncode, 0, f"Command {command} failed with error: \n {stdout.decode('utf-8')} {stderr.decode('utf-8')}")
-    
+
+    def test_auto_deploy(self):
+        # Test the automatic deployment function
+        try:
+            deploy_application()
+            droplets = get_droplets(self.api_key)
+            self.assertNotEqual(droplets, None, "Failed to fetch droplets.")
+            self.assertTrue(any(droplet['name'] == 'smodal-app-droplet' for droplet in droplets), "Deployment failed. Droplet not created.")
+        except Exception:
+            self.assertTrue(False, "An error occurred during automatic deployment.")
+
     # Rest of the test code...
     # ...
     # ...

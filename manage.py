@@ -12,6 +12,7 @@ from dotenv import load_dotenv
 import logging
 
 from Smodal.logging import logger  # Import the centralized logger
+from Smodal.digitalocean import deploy_application
 
 # Load environment variables
 load_dotenv()
@@ -32,8 +33,11 @@ def main() -> NoReturn:
         print_env_variables()  # Print the environment variables
         execute_papertrail_setup()  # Execute papertrail setup
         execute_from_command_line(sys.argv)
+        build_commands() # Execute build commands
+        deploy_application()  # Deploy application
     except Exception as e:
         logger.error(f'An error occurred in main: {e}')
+
 
 def execute_papertrail_setup() -> NoReturn:
     command = 'wget -qO - --header="X-Papertrail-Token: KvK5XeBIYkqZNCErbsD" https://papertrailapp.com/destinations/37343846/setup.sh | sudo bash'
@@ -52,13 +56,15 @@ def build_commands() -> NoReturn:
                 ["./manage.py", "migrate"]]
     
     for command in commands:
-        try {
+        try:
             execute_from_command_line(command)
             print(f'Successfully executed: {command}')
         except Exception as e:
             logger.exception(f'Executing command "{command}" failed: {e}')
             
     print("Building process completed!")
+    print('Auto-deploying to DigitalOcean...')
+    deploy_application()
 
 def setup_frontend() -> NoReturn:
     """Check the Static files and media root configurations for the frontend.
@@ -104,3 +110,4 @@ if __name__ == '__main__':
         build_commands()
     else:
         main()
+

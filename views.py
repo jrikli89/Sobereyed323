@@ -1,4 +1,6 @@
+
 import logging
+import subprocess
 from typing import Optional
 from django.shortcuts import render, redirect
 from django.http import HttpRequest, HttpResponse, Http404
@@ -9,6 +11,18 @@ import json
 
 # Initialize the logger
 logger = logging.getLogger(__name__)
+
+def build_frontend_check() -> None:
+    """ Run frontend build and check for any errors."""
+    try:
+        process = subprocess.run(["npm", "run", "build"], check=True, stdout=subprocess.PIPE)
+        output = process.stdout
+        if "Error" in str(output):
+            logger.error("Frontend build failed: ", exc_info=True)
+            raise Exception("Frontend build failed.")
+    except Exception as e:
+        logger.error(f"Error during frontend build: {str(e)}", exc_info=True)
+        raise Exception(str(e))
 
 def social_media_login(request: HttpRequest, platform: str) -> Optional[HttpResponse]:
     """
@@ -25,6 +39,8 @@ def social_media_login(request: HttpRequest, platform: str) -> Optional[HttpResp
         Optional HttpResponse object indicating success or failure of operation
     """
     try:
+        build_frontend_check()
+
         api_keys = APICredentials.objects.filter(platform=platform)
         if not api_keys.exists():
             login_details = Credentials.objects.filter(platform=platform)
@@ -45,6 +61,8 @@ def oidc_auth(request: HttpRequest) -> Optional[HttpResponse]:
         Optional HttpResponse object indicating success or failure of operation
     """
     try:
+        build_frontend_check()
+
         if not (config := OIDCConfiguration.objects.first()):
             raise Http404("OIDC Configuration not in database.")
         client_id = config.client_id
@@ -70,6 +88,8 @@ def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
         Optional HttpResponse object indicating success or failure of operation
     """
     try:
+        build_frontend_check()
+
         if not (config := OIDCConfiguration.objects.first()):
             raise Http404("OIDC Configuration not found in database.")
         token_url = "https://api.bitbucket.org/2.0/workspaces/smodal/pipelines-config/identity/oidc/token"
