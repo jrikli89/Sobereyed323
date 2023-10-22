@@ -86,13 +86,12 @@ def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
     # OIDC callback logic
 
 def render(request, page):
-    if page in PAGES:
-        page_cfg = PAGES[page]
-        if page_cfg.get('login_required', False) and not is_authenticated(request):
-            return load_template('login.html')
-        return page_cfg['method'](request)
-    else:
+    if page not in PAGES:
         return Http404
+    page_cfg = PAGES[page]
+    if page_cfg.get('login_required', False) and not is_authenticated(request):
+        return load_template('login.html')
+    return page_cfg['method'](request)
 
 def serve(request, page):
     return render(request, page)
@@ -100,9 +99,6 @@ def serve(request, page):
 # New methods to handle affiliate manager functionality    
 @require_login
 def register_affiliate_manager(request):
-    if request.method == 'POST':
-        # Code to register a new affiliate manager goes here
-        pass
     return render(request, 'register_affiliate_manager.html')
 
 @require_login
