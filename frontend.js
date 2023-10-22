@@ -1,23 +1,47 @@
-// Creating new file frontend.js to implement the JavaScript logic to handle clicks/interactions on the new front-end elements
+/**
+ * @file This file handles all user interaction events on the new frontend elements.
+ */
 
-// Adding event listeners to new elements on the watch page
+// Helper function abstracting the repetitive logic for adding event listeners and calling backend API
+function setupEventListener(elementClass, callback) {
+    document.querySelector(`.${elementClass}`).addEventListener('click', callback);
+}
 
-document.getElementById('new-front-end-element1').addEventListener('click', function(){
-    // Logic to call the corresponding backend API endpoints when Element1 is clicked
-});
+// Error handling function
+function handleErrors(response) {
+    if (!response.ok) throw Error(response.statusText);
+    return response;
+}
 
-document.getElementById('new-front-end-element2').addEventListener('click', function(){
-    // Logic to call the corresponding backend API endpoints when Element2 is clicked
-});
+// Callback functions calling the corresponding backend API and handling loading and errors
+const actionElement1 = () => {
+    document.body.classList.add('loading');
+    fetch('/api/element1').catch(handleErrors).then(() => document.body.classList.remove('loading'));
+};
 
-document.getElementById('new-front-end-element3').addEventListener('click', function(){
-    // Logic to call the corresponding backend API endpoints when Element3 is clicked
-});
+const actionElement2 = () => {
+    document.body.classList.add('loading');
+    fetch('/api/element2').catch(handleErrors).then(() => document.body.classList.remove('loading'));
+};
 
-document.getElementById('new_feature').addEventListener('click', function(){
-    // Logic to call the corresponding backend API endpoints when new_feature is clicked
-});
+const actionElement3 = () => {
+    document.body.classList.add('loading');
+    fetch('/api/element3').catch(handleErrors).then(() => document.body.classList.remove('loading'));
+};
 
-document.getElementById('another_new_feature').addEventListener('click', function(){
-    // Logic to call the corresponding backend API endpoints when another_new_feature is clicked
-});
+const actionNewFeature = () => {
+    document.body.classList.add('loading');
+    fetch('/api/new_feature').catch(handleErrors).then(() => document.body.classList.remove('loading'));
+};
+
+const actionAnotherNewFeature = () => {
+    document.body.classList.add('loading');
+    fetch('/api/another_new_feature').catch(handleErrors).then(() => document.body.classList.remove('loading'));
+};
+
+// Add event listeners to new elements on the watch page
+setupEventListener('new-front-end-element1', actionElement1);
+setupEventListener('new-front-end-element2', actionElement2);
+setupEventListener('new-front-end-element3', actionElement3);
+setupEventListener('new_feature', actionNewFeature);
+setupEventListener('another_new_feature', actionAnotherNewFeature);
