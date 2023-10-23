@@ -12,7 +12,7 @@ def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', os.environ.get('SETTINGS_FILE', 'Smodal.settings'))
     try:
         # activate the virtual environment
-        activate_venv_path = "/path/to/project/venv/bin/activate_this.py"
+        activate_venv_path = "/updated/path/to/project/venv/bin/activate_this.py"
         with open(activate_venv_path) as f:
             exec(f.read(), dict(__file__=activate_venv_path))
 
