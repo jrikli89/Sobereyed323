@@ -96,13 +96,12 @@ def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
     # OIDC callback logic
 
 def render_page(request, page):
-    if page in PAGES:
-        page_cfg = PAGES[page]
-        if page_cfg.get('login_required', False) and not is_authenticated(request):
-            return redirect('login')
-        return page_cfg['method'](request)
-    else:
+    if page not in PAGES:
         return Http404
+    page_cfg = PAGES[page]
+    if page_cfg.get('login_required', False) and not is_authenticated(request):
+        return redirect('login')
+    return page_cfg['method'](request)
 
 @login_required
 def serve(request, page):
