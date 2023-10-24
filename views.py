@@ -120,13 +120,12 @@ def oidc_callback(request: HttpRequest) -> Optional[HttpResponse]:
 
 def render_page(request, page):
     try:
-        if page in PAGES:
-            page_cfg = PAGES[page]
-            if page_cfg.get('login_required', False) and not is_authenticated(request):
-                return redirect('login')
-            return page_cfg['method'](request)
-        else:
+        if page not in PAGES:
             return Http404
+        page_cfg = PAGES[page]
+        if page_cfg.get('login_required', False) and not is_authenticated(request):
+            return redirect('login')
+        return page_cfg['method'](request)
     except Exception as e:
         logger.error(f"Error in render_page: {str(e)}", exc_info=True)
         return JsonResponse({"error": "An error occurred while rendering the page."}, status=500)
