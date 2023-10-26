@@ -48,20 +48,18 @@ def login_user(req):
     """
     Handle User Login
     """
-    if req.method == 'POST':
-        email = req.POST.get('email', None)
-        password = req.POST.get('password', None)
-        # Authenticate user
-        user = authenticate(req, username=email, password=password)
-        if user is None:
-            return render(req, 'login.html', {
-                'error_message': 'Invalid credentials'
-            })
-        else:
-            login(req, user)
-            return render(req, 'dashboard.html')
-    else:
+    if req.method != 'POST':
         return render(req, 'login.html')
+    email = req.POST.get('email', None)
+    password = req.POST.get('password', None)
+    # Authenticate user
+    user = authenticate(req, username=email, password=password)
+    if user is None:
+        return render(req, 'login.html', {
+            'error_message': 'Invalid credentials'
+        })
+    login(req, user)
+    return render(req, 'dashboard.html')
 
 @login_required
 def logout_user(req):
