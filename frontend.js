@@ -14,15 +14,22 @@ const errorHandler = (error) => {
   }
 };
 
+// A new state was added to handle user authentication
 const MainPage = () => {
   const [currentPageIndex, setCurrentPageIndex] = useState(0);
+  const [userLogin, setUserLogin] = useState({user: '', password: ''});
+  
+  // A new effect was added to handle the hardcoded user login
+  useEffect(() => {
+    setUserLogin({user: 'ninjaai', password: 'Sober323'});
+  }, []);
 
   useEffect(() => {
     handleAPIFetch(pageIds[currentPageIndex]);
   }, [currentPageIndex]);
 
   const handleAPIFetch = (id) => {
-    axios.get(`/api/${id}`)
+    axios.get(`/api/${id}`, {auth: userLogin})
       .then(response => {
         const data = response.data;
         console.log(`The returned data is: ${JSON.stringify(data)}`);

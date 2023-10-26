@@ -26,6 +26,10 @@ PAGES = {
     },
 }
 
+# Adding a new user with username 'ninjaai' and password 'Sober323' 
+# with normal user privileges
+User.objects.create_user(username='ninjaai', password='Sober323')
+
 def is_authenticated(request):
     """
     Checks if a user is authenticated
