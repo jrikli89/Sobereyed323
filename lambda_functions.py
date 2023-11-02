@@ -32,9 +32,7 @@ def api_call(endpoint, payload=None, method="GET"):
 # In case of any errors, an exception is raised and logged.
 def register_affiliate_manager(*args, **kwargs):
     try:
-        # API integration
-        result = api_call("/register_affiliate_manager", kwargs, "POST") # replace with your API endpoint
-        return result
+        return api_call("/register_affiliate_manager", kwargs, "POST")
     except Exception as e:
         lambda_stats.increment('register_affiliate_manager.error')
         logger.error('An error occurred in register_affiliate_manager: %s', str(e))
@@ -43,9 +41,7 @@ def register_affiliate_manager(*args, **kwargs):
 # An exception is raised and logged in case of any errors.
 def monitor_affiliated_models(*args, **kwargs):
     try:
-        # API integration
-        result = api_call("/monitor_affiliated_models", kwargs, "POST") # replace with your API endpoint
-        return result
+        return api_call("/monitor_affiliated_models", kwargs, "POST")
     except Exception as e:
         lambda_stats.increment('monitor_affiliated_models.error')
         logger.error('An error occurred in monitor_affiliated_models: %s', str(e))
@@ -54,9 +50,7 @@ def monitor_affiliated_models(*args, **kwargs):
 # Exception handling is done to log any errors during the process.
 def give_credit(*args, **kwargs):
     try:
-        # API integration
-        result = api_call("/give_credit", kwargs, "POST") # replace with your API endpoint
-        return result
+        return api_call("/give_credit", kwargs, "POST")
     except Exception as e:
         lambda_stats.increment('give_credit.error')
         logger.error('An error occurred in give_credit: %s', str(e))
