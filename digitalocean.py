@@ -32,8 +32,6 @@ def get_droplets(api_key):
         return None
     else:
         if response.status_code == 200:
-            droplets = json.loads(response.text)['droplets']
-            return droplets
-        else:
-            print(f"Error: {response.status_code}")
-            return None
+            return json.loads(response.text)['droplets']
+        print(f"Error: {response.status_code}")
+        return None
