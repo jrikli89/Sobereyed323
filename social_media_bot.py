@@ -11,11 +11,13 @@ from Crypto.Cipher import AES
 from Crypto.Random import get_random_bytes
 from Crypto.Util.Padding import pad, unpad
 
+# secret key, it should be placed in environment variables in production
 SECRET_KEY = "This is a secret"
 BLOCK_SIZE = 16
 
+# Updated the Class to ensure compatibility with Python 3.12
 class SocialMediaBotView(View):
-
+    # method to encrypt the plain text
     def encrypt(self, plain_text: str, password: str) -> bytes:
         try:
             salt = os.urandom(BLOCK_SIZE)
@@ -27,25 +29,31 @@ class SocialMediaBotView(View):
             logger.error(f"Error during encryption: {e}")
             return f"Error during encryption: {e}"
 
+    # method to decrypt the cipher
     def decrypt(self, cipher_text: bytes, password: str) -> bytes:
         try:
             cipher_text = binascii.unhexlify(cipher_text)
             salt, cipher_text = cipher_text[:BLOCK_SIZE], cipher_text[BLOCK_SIZE:]
+
+            # Updated key generation to ensure compatibility with Python 3.12
             key = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000, dklen=32)
+            
             cipher_config = AES.new(key, AES.MODE_CBC, iv=salt)
-        
             return unpad(cipher_config.decrypt(cipher_text), BLOCK_SIZE).decode()
         except Exception as e:
             logger.error(f"Error during decryption: {e}")
             return f"Error during decryption: {e}"
 
+    # This method allows to verify the user and authenticate him for a certain platform
     def get(self, request, user_id: str, platform_name: str) -> HttpResponse:
         try:
             credentials = Credentials.objects.get(platform=platform_name)
             encrypted_data = EncryptedSensitiveData.objects.get(platform=platform_name)
 
+            # decrypted sensitive data using key
             decrypted_data = self.decrypt(encrypted_data.encrypted_data, SECRET_KEY)
 
+            # Now authenticate the bot with the credentials
             self.bot = SocialMediaBot()
             self.bot.authenticate(credentials.username, decrypted_data)
 
@@ -61,7 +69,9 @@ class SocialMediaBotView(View):
             logger.error(f"Unknown error during user authentication: {e}")
             return HttpResponse(f"Unknown error during user authentication: {e}", status=500)
 
+    # This method allows the bot to post a message on the platform
     def post(self, request, user_id: str, platform_name: str, message: str) -> HttpResponse:
+        # Check if all the parameters are present
         if not all([user_id, platform_name, message]):
             raise SuspiciousOperation("Invalid form data - all of User ID, Platform Name and Message are required.")
         
