@@ -63,8 +63,8 @@ class SocialMediaBotView(View):
             logger.error("User does not exist")
             return HttpResponse("User does not exist", status=404)
         except ValidationError as e:
-            logger.error("Validation error: {}".format(e))
-            return HttpResponse("Validation error: {}".format(e), status=400)
+            logger.error(f"Validation error: {e}")
+            return HttpResponse(f"Validation error: {e}", status=400)
         except Exception as e:
             logger.error(f"Unknown error during user authentication: {e}")
             return HttpResponse(f"Unknown error during user authentication: {e}", status=500)
@@ -74,7 +74,7 @@ class SocialMediaBotView(View):
         # Check if all the parameters are present
         if not all([user_id, platform_name, message]):
             raise SuspiciousOperation("Invalid form data - all of User ID, Platform Name and Message are required.")
-        
+
         try:
             self.bot.post_message(user_id, platform_name, message)
             logger.info(f"Posted message {message} to {platform_name} for user {user_id}!")
@@ -86,8 +86,8 @@ class SocialMediaBotView(View):
             logger.error("Invalid or expired Access Token")
             return HttpResponse("Invalid or expired Access Token", status=403)
         except ValidationError as e:
-            logger.error("Validation error: {}".format(e))
-            return HttpResponse("Validation error: {}".format(e), status=400)
+            logger.error(f"Validation error: {e}")
+            return HttpResponse(f"Validation error: {e}", status=400)
         except Exception as e:
             logger.error(f"Unknown error during message posting: {e}")
             return HttpResponse(f"Unknown error during message posting: {e}", status=500)
