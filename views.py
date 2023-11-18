@@ -90,12 +90,11 @@ def login_user(req):
     """
     Handle User Login
     """
-    if req.method == "POST":
-        response = handle_user_login(req.POST, SERVICES_ADDRESS, SERVICES_PORT)
-        return JsonResponse(response)
-    else:
+    if req.method != "POST":
         # Unnecessary now due to require_POST decorator
         return JsonResponse({"status": "error", "message": "You must submit a POST request."}, status=400)
+    response = handle_user_login(req.POST, SERVICES_ADDRESS, SERVICES_PORT)
+    return JsonResponse(response)
 
 def offline_login(req):
     """
