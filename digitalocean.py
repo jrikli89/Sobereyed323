@@ -16,11 +16,7 @@ def get_droplets(api_key):
     # Requesting data from the DigitalOcean API
     response = requests.get('https://api.digitalocean.com/v2/droplets', headers=headers)
 
-    # If the response is successful, return the list of droplets
     if response.status_code == 200:
-        droplets = json.loads(response.text)['droplets']
-        return droplets
-    # If the response isn't successful, print the error and return None
-    else:
-        print(f"Error: {response.status_code}")
-        return None
+        return json.loads(response.text)['droplets']
+    print(f"Error: {response.status_code}")
+    return None

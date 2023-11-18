@@ -75,8 +75,7 @@ def log_build_process(msg: str, level: str = 'info') -> None:
     :param level: Logging level (default='info')
     """
     try:
-        log_func = getattr(build_logger, level, None)
-        if log_func:
+        if log_func := getattr(build_logger, level, None):
             log_func(msg)
         else:
             build_logger.info(msg)
