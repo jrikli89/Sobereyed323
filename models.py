@@ -28,7 +28,7 @@ class FileUpload(BaseModel):
     @validator('file')
     def check_file_extension(cls, v):
         allowed_extensions = ['pdf', 'doc', 'jpg', 'png']
-        if not v.split(".")[-1] in allowed_extensions:
+        if v.split(".")[-1] not in allowed_extensions:
             raise ValueError('Invalid file extension. Please upload a pdf, doc, jpg or png file.')
         return v
 

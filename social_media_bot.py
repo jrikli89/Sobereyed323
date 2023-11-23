@@ -40,12 +40,8 @@ class SocialMediaBot:
         # authenticate method using the new pydantic model
         user = UserProfile.parse_raw(decoded_data)
         if user_id != user.id:
-            raise ValidationError(f"User id did not match")
+            raise ValidationError("User id did not match")
 
     def post_message(self, user_id: str, platform_name: str, message: str):
-        # method for performing api call to post message using the new pydantic models
-        post_data = UIPageData.parse_raw(message)
-        # Simulating API call and response
-        response = post_data
-        return response
+        return UIPageData.parse_raw(message)
 ```
