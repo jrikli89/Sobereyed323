@@ -56,17 +56,17 @@ def affiliate_credit(request):
 
 @login_required
 def is_authenticated(request):
-    userid = request.session.get("user_id", None)
-    if not userid: 
+    if userid := request.session.get("user_id", None):
+        return JsonResponse(check_authentication(userid, SERVICES_ADDRESS, SERVICES_PORT))
+    else:
         return HttpResponseBadRequest("User is not authenticated.")
-    return JsonResponse(check_authentication(userid, SERVICES_ADDRESS, SERVICES_PORT))
 
 @login_required
 def load_dashboard(request):
-    userid = request.session.get("user_id", None)
-    if not userid: 
+    if userid := request.session.get("user_id", None):
+        return JsonResponse(load_user_dashboard(userid, SERVICES_ADDRESS, SERVICES_PORT))
+    else:
         return HttpResponseBadRequest("User is not authenticated.")
-    return JsonResponse(load_user_dashboard(userid, SERVICES_ADDRESS, SERVICES_PORT))
 
 @require_POST
 def login_user(request):
