@@ -60,8 +60,7 @@ def log_pactflow_response(headers: dict, body: str) -> None:
 
 def log_build_process(msg: str, level: str = 'info') -> None:
     try:
-        log_func = getattr(build_logger, level, None)
-        if log_func:
+        if log_func := getattr(build_logger, level, None):
             log_func(msg)
         else:
             build_logger.info(msg)
@@ -84,8 +83,8 @@ def log_execution_details(func):
     return wrapper
 
 def uncaught_exception_handler(type, value, tb):
-    detailed_logger.error('Uncaught exception: {}'.format(str(value)))
+    detailed_logger.error(f'Uncaught exception: {str(value)}')
     tb = traceback.format_exception(type, value, tb)
-    detailed_logger.error('Traceback: {}'.format(''.join(tb)))
+    detailed_logger.error(f"Traceback: {''.join(tb)}")
 
 sys.excepthook = uncaught_exception_handler
