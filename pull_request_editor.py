@@ -26,15 +26,14 @@ def get_open_pull_requests(repo_owner: str,
     """
     try:
         # changed the repository string from "Smodal" to "modal.tokai"
-        repo = g.get_repo(f"{repo_owner}/{repo_name}")  
-        open_pull_requests = repo.get_pulls(state = 'open')
-        return open_pull_requests
+        repo = g.get_repo(f"{repo_owner}/{repo_name}")
+        return repo.get_pulls(state = 'open')
     except RateLimitExceededException as e:
         logger.error(f'Rate limit exceeded while getting open pull requests: {str(e)}')
-        raise e  
+        raise e
     except BadCredentialsException as e:
         logger.error(f'Bad credentials while getting open pull requests: {str(e)}')
-        raise e 
+        raise e
     except Exception as e:
         logger.error(f'Unexpected error occurred while getting open pull requests: {str(e)}')
         raise e  
@@ -84,10 +83,6 @@ def main() -> None:
 
         if open_pull_requests is None:
             return
-
-        if open_pull_requests:   
-            # your editing and other operation code here based on the new plan
-            pass
 
     except RateLimitExceededException as e:
         logger.error(f'Rate limit exceeded in main function: {str(e)}')
