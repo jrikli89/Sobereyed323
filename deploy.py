@@ -24,7 +24,11 @@ def check_and_install_docker_compose():
 
 def pull_app():
     # Pull the app data from the new base URL
-    subprocess.run(f'appservices pull --remote=data-evpxv mv data/* . && rm -r data'.replace('appservices', BASE_URL).split())
+    subprocess.run(
+        'appservices pull --remote=data-evpxv mv data/* . && rm -r data'.replace(
+            'appservices', BASE_URL
+        ).split()
+    )
 
 def build_angular_app():
     subprocess.run('npm run build --omit=dev'.split())
